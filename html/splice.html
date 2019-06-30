@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Couple Splice</title>
+</head>
+
+<body>
+    <div>
+        <video id="view" style="width: 640px;height: 480px;"></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+    <div>
+        <button id="take">Take</button>
+    </div>
+    <div>
+        <img src="" id="photo"/>
+    </div>
+    <div>
+        <p id="debug"></p>
+    </div>
+
+    <script>
+        !(function () {
+            let view = document.getElementById('view');
+            let take = document.getElementById('take');
+            let canvas = document.getElementById('canvas');
+            let photo = document.getElementById('photo');
+            let videoPlaying = false;
+
+            navigator.mediaDevices.enumerateDevices().then((devices) => {
+                devices = devices.filter((d) => d.kind === 'videoinput');
+            });
+
+            const constraints = {
+                video: true,
+                audio: false
+            };
+            
+            navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+                view.srcObject = stream;
+                view.onloadedmetadata = function (e) {
+                    view.play();
+                    videoPlaying = true;
+                };
+            });
+
+            take.addEventListener('click', function () {
+                if (videoPlaying) {
+                    canvas.width = view.videoWidth;
+                    canvas.height = view.videoHeight;
+                    canvas.getContext('2d').drawImage(view, 0, 0);
+                    let data = canvas.toDataURL('image/webp');
+                    photo.setAttribute('src', data);
+                }
+            }, false);
+        })();
+    </script>
+</body>
+
+</html>
