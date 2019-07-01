@@ -16,6 +16,7 @@
     </div>
     <div>
         <button id="take">Take</button>
+        <button id="down">Down</button>
     </div>
     <div>
         <img src="" id="photo" />
@@ -33,6 +34,7 @@
             let videoSelect = document.querySelector('select#source');
             videoSelect.onchange = getStream;
             let videoPlaying = false;
+            let photoCaptured = false;
 
             navigator.mediaDevices.enumerateDevices()
                 .then(gotDevices).then(getStream)
@@ -82,8 +84,19 @@
                     canvas.width = view.videoWidth;
                     canvas.height = view.videoHeight;
                     canvas.getContext('2d').drawImage(view, 0, 0);
-                    let data = canvas.toDataURL('image/webp');
+                    let data = canvas.toDataURL('image/png');
                     photo.setAttribute('src', data);
+                    photoCaptured = true;
+                }
+            }, false);
+
+            down.addEventListener('click', function () {
+                if (photoCaptured) {
+                    let link = document.createElement("a");
+                    link.href = photo.getAttribute('src');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 }
             }, false);
         })();
