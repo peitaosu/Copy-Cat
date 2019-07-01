@@ -12,10 +12,13 @@
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
     <div>
+        <label for="source">Source: </label><select id="source"></select>
+    </div>
+    <div>
         <button id="take">Take</button>
     </div>
     <div>
-        <img src="" id="photo"/>
+        <img src="" id="photo" />
     </div>
     <div>
         <p id="debug"></p>
@@ -27,24 +30,52 @@
             let take = document.getElementById('take');
             let canvas = document.getElementById('canvas');
             let photo = document.getElementById('photo');
+            let videoSelect = document.querySelector('select#source');
+            videoSelect.onchange = getStream;
             let videoPlaying = false;
 
-            navigator.mediaDevices.enumerateDevices().then((devices) => {
-                devices = devices.filter((d) => d.kind === 'videoinput');
-            });
+            navigator.mediaDevices.enumerateDevices()
+                .then(gotDevices).then(getStream)
 
-            const constraints = {
-                video: true,
-                audio: false
-            };
-            
-            navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+            function gotDevices(deviceInfos) {
+                for (var i = 0; i !== deviceInfos.length; ++i) {
+                    var deviceInfo = deviceInfos[i];
+                    var option = document.createElement('option');
+                    option.value = deviceInfo.deviceId;
+                    if (deviceInfo.kind === 'videoinput') {
+                        option.text = deviceInfo.label || 'camera ' +
+                            (videoSelect.length + 1);
+                        videoSelect.appendChild(option);
+                    }
+                }
+            }
+
+            function getStream() {
+                if (window.stream) {
+                    window.stream.getTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                }
+
+                var constraints = {
+                    audio: false,
+                    video: {
+                        deviceId: { exact: videoSelect.value }
+                    }
+                };
+
+                navigator.mediaDevices.getUserMedia(constraints).
+                    then(gotStream);
+            }
+
+            function gotStream(stream) {
+                window.stream = stream;
                 view.srcObject = stream;
                 view.onloadedmetadata = function (e) {
                     view.play();
                     videoPlaying = true;
                 };
-            });
+            }
 
             take.addEventListener('click', function () {
                 if (videoPlaying) {
