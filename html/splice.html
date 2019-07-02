@@ -9,7 +9,7 @@
 <body>
     <div>
         <video id="view" style="width:100%;height:auto;"></video>
-        <video id="full" style="width:3024px;height:4032px;display:none;"></video>
+        <video id="full" style="width:4096px;height:4096px;display:none;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
     <div>
@@ -22,15 +22,13 @@
     <div>
         <img src="" id="photo" />
     </div>
-    <div>
-        <p id="debug"></p>
-    </div>
 
     <script>
         !(function () {
             let view = document.getElementById('view');
             let full = document.getElementById('full');
             let take = document.getElementById('take');
+            let down = document.getElementById('down');
             let canvas = document.getElementById('canvas');
             let photo = document.getElementById('photo');
             let videoSelect = document.querySelector('select#source');
@@ -102,6 +100,7 @@
                 if (photoCaptured) {
                     let link = document.createElement("a");
                     link.href = photo.getAttribute('src');
+                    link.download = Date.now() + ".png";
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
