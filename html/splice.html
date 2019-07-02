@@ -11,9 +11,13 @@
         <video id="view" style="width:100%;height:auto;"></video>
         <video id="full" style="width:4096px;height:4096px;display:none;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
+        <img id="refer" src="#" />
     </div>
     <div>
         <label for="source">Source: </label><select id="source"></select>
+    </div>
+    <div>
+        <input type="file" accept="image/*" id="upload">
     </div>
     <div>
         <button id="take">Take</button>
@@ -27,9 +31,11 @@
         !(function () {
             let view = document.getElementById('view');
             let full = document.getElementById('full');
+            let canvas = document.getElementById('canvas');
+            let refer = document.getElementById('refer');
             let take = document.getElementById('take');
             let down = document.getElementById('down');
-            let canvas = document.getElementById('canvas');
+            let upload = document.getElementById('upload');
             let photo = document.getElementById('photo');
             let videoSelect = document.querySelector('select#source');
             videoSelect.onchange = getStream;
@@ -106,6 +112,21 @@
                     document.body.removeChild(link);
                 }
             }, false);
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        refer.setAttribute('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            upload.change(function () {
+                readURL(this);
+            });
+
         })();
     </script>
 </body>
