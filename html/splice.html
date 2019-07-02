@@ -7,11 +7,11 @@
 </head>
 
 <body>
-    <div>
+    <div style="position: relative;">
         <video id="view" style="width:100%;height:auto;"></video>
         <video id="full" style="width:4096px;height:4096px;display:none;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
-        <img id="refer" src="#" />
+        <img id="refer" src="#" style="position:absolute; left: 0; top: 0;opacity: 0.5; width:100%; height:auto;"/>
     </div>
     <div>
         <label for="source">Source: </label><select id="source"></select>
@@ -123,9 +123,11 @@
                 }
             }
 
-            upload.change(function () {
+            upload.addEventListener('change', function () {
+                console.log("changed");
                 readURL(this);
-            });
+                }, false);
+
 
         })();
     </script>
