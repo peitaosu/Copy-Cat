@@ -8,7 +8,8 @@
 
 <body>
     <div>
-        <video id="view" style="width: 640px;height: 480px;"></video>
+        <video id="view" style="width:100%;height:auto;"></video>
+        <video id="full" style="width:3024px;height:4032px;display:none;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
     <div>
@@ -28,6 +29,7 @@
     <script>
         !(function () {
             let view = document.getElementById('view');
+            let full = document.getElementById('full');
             let take = document.getElementById('take');
             let canvas = document.getElementById('canvas');
             let photo = document.getElementById('photo');
@@ -62,7 +64,9 @@
                 var constraints = {
                     audio: false,
                     video: {
-                        deviceId: { exact: videoSelect.value }
+                        deviceId: { exact: videoSelect.value },
+                        width: { ideal: 4096 },
+                        height: { ideal: 4096 } 
                     }
                 };
 
@@ -77,13 +81,17 @@
                     view.play();
                     videoPlaying = true;
                 };
+                full.srcObject = stream;
+                full.onloadedmetadata = function (e) {
+                    full.play();
+                };
             }
 
             take.addEventListener('click', function () {
                 if (videoPlaying) {
-                    canvas.width = view.videoWidth;
-                    canvas.height = view.videoHeight;
-                    canvas.getContext('2d').drawImage(view, 0, 0);
+                    canvas.width = full.videoWidth;
+                    canvas.height = full.videoHeight;
+                    canvas.getContext('2d').drawImage(full, 0, 0);
                     let data = canvas.toDataURL('image/png');
                     photo.setAttribute('src', data);
                     photoCaptured = true;
