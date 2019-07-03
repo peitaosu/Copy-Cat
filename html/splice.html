@@ -11,22 +11,29 @@
         <label for="source">Source: </label><select id="source"></select>
     </div>
     <div>
-        <input type="file" accept="image/*" id="upload">
+        <label>Reference: </label><input type="file" accept="image/*" id="upload">
     </div>
     <div>
         <button id="take">Take</button>
         <button id="down">Down</button>
     </div>
-    <div id="view" style="position: relative;">
-        <video id="preview" style="width:100%;height:auto;"></video>
-        <video id="full" style="width:4096px;height:4096px;display:none;"></video>
-        <canvas id="canvas" style="display:none;"></canvas>
-        <img id="refer" src="#" style="position:absolute; left: 0; top: 0;opacity: 0.5; width:100%; height:auto;"/>
+    <div id="view">
+        <video id="preview"></video>
+        <video id="full"></video>
+        <canvas id="canvas"></canvas>
+        <img id="refer" src="#"/>
     </div>
     <div>
         <img src="" id="photo" />
     </div>
 
+    <style>
+        #view {position: relative;}
+        #preview {width:100%;height:auto;}
+        #full {width:4096px;height:4096px;display:none;}
+        #canvas {display:none;}
+        #refer {position:absolute; left: 0; top: 0;opacity: 0.5; width:100%; height:auto;}
+    </style>
     <script>
         !(function () {
             let view = document.getElementById('view');
@@ -114,20 +121,15 @@
                 }
             }, false);
 
-            function readURL(input) {
-                if (input.files && input.files[0]) {
+            upload.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
                         refer.setAttribute('src', e.target.result);
                     }
-                    reader.readAsDataURL(input.files[0]);
+                    reader.readAsDataURL(this.files[0]);
                 }
-            }
-
-            upload.addEventListener('change', function () {
-                readURL(this);
-                }, false);
-
+            }, false);
 
         })();
     </script>
