@@ -21,18 +21,40 @@
         <video id="preview"></video>
         <video id="full"></video>
         <canvas id="canvas"></canvas>
-        <img id="refer" src="#"/>
+        <img id="refer" src="#" />
     </div>
     <div>
         <img src="" id="photo" />
     </div>
 
     <style>
-        #view {position: relative;}
-        #preview {width:100%;height:auto;}
-        #full {width:4096px;height:4096px;display:none;}
-        #canvas {display:none;}
-        #refer {position:absolute; left: 0; top: 0;opacity: 0.5; width:100%; height:auto;}
+        #view {
+            position: relative;
+        }
+
+        #preview {
+            width: 100%;
+            height: auto;
+        }
+
+        #full {
+            width: 4096px;
+            height: 4096px;
+            display: none;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        #refer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.5;
+            width: 100%;
+            height: auto;
+        }
     </style>
     <script>
         !(function () {
@@ -45,8 +67,8 @@
             let down = document.getElementById('down');
             let upload = document.getElementById('upload');
             let photo = document.getElementById('photo');
-            let videoSelect = document.querySelector('select#source');
-            videoSelect.onchange = getStream;
+            let source = document.getElementById('source');
+            source.onchange = getStream;
             let videoPlaying = false;
             let photoCaptured = false;
 
@@ -60,8 +82,8 @@
                     option.value = deviceInfo.deviceId;
                     if (deviceInfo.kind === 'videoinput') {
                         option.text = deviceInfo.label || 'camera ' +
-                            (videoSelect.length + 1);
-                        videoSelect.appendChild(option);
+                            (source.length + 1);
+                        source.appendChild(option);
                     }
                 }
             }
@@ -76,9 +98,9 @@
                 var constraints = {
                     audio: false,
                     video: {
-                        deviceId: { exact: videoSelect.value },
+                        deviceId: { exact: source.value },
                         width: { ideal: 4096 },
-                        height: { ideal: 4096 } 
+                        height: { ideal: 4096 }
                     }
                 };
 
