@@ -4,29 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Couple Splice</title>
+    <link rel="stylesheet" href="static/css/bootflat.min.css" />
+    <link rel="stylesheet" href="static/css/site.min.css" />
+    <link rel="stylesheet" href="static/css/custom.css" />
+    <script src="static/js/site.min.js"></script>
 </head>
 
 <body>
-    <div>
-        <label for="source">Source: </label><select id="source"></select>
+    <div class="container documents">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="source">Source: </label>
+                <select id="source"></select>
+            </div>
+            <div class="col-md-4">
+                <label>Reference: </label>
+                <input type="file" accept="image/*" id="upload">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button id="take" type="button" class="btn btn-primary btn-block">Take</button>
+                <button id="down" type="button" class="btn btn-primary btn-block">Down</button>
+                <button id="rotate" type="button" class="btn btn-primary btn-block">Rotate</button>
+            </div>
+        </div>
+        <div id="view">
+            <video id="preview"></video>
+            <video id="full"></video>
+            <canvas id="canvas"></canvas>
+            <img id="refer" src="#" />
+        </div>
+        <div>
+            <img src="" id="photo" />
+        </div>
     </div>
-    <div>
-        <label>Reference: </label><input type="file" accept="image/*" id="upload">
-    </div>
-    <div>
-        <button id="take">Take</button>
-        <button id="down">Down</button>
-    </div>
-    <div id="view">
-        <video id="preview"></video>
-        <video id="full"></video>
-        <canvas id="canvas"></canvas>
-        <img id="refer" src="#" />
-    </div>
-    <div>
-        <img src="" id="photo" />
-    </div>
-
     <style>
         #view {
             position: relative;
@@ -55,6 +67,18 @@
             width: 100%;
             height: auto;
         }
+
+        .rotate90 {
+            transform: rotate(90deg);
+        }
+
+        .rotate180 {
+            transform: rotate(180deg);
+        }
+
+        .rotate270 {
+            transform: rotate(270deg);
+        }
     </style>
     <script>
         !(function () {
@@ -68,9 +92,11 @@
             let upload = document.getElementById('upload');
             let photo = document.getElementById('photo');
             let source = document.getElementById('source');
+            let rotate = document.getElementById('rotate');
             source.onchange = getStream;
             let videoPlaying = false;
             let photoCaptured = false;
+            let angle = 0;
 
             navigator.mediaDevices.enumerateDevices()
                 .then(gotDevices).then(getStream)
@@ -151,6 +177,11 @@
                     }
                     reader.readAsDataURL(this.files[0]);
                 }
+            }, false);
+
+            rotate.addEventListener('click', function () {
+                angle = (angle + 90) % 360;
+                refer.className = "rotate" + angle;
             }, false);
 
         })();
