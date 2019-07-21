@@ -8,3 +8,6 @@ Take a picture same as reference.
 * reference image rotate
 * real-time image take
 * real-time image download
+
+## platforms
+* Web (html)
