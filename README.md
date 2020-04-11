@@ -9,8 +9,3 @@ Take a picture same as reference.
 * real-time image take
 * real-time image download
 
-## platforms
-* Web (html)
-
-## 3rd Party
-* Bootflat (Web)
